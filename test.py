@@ -14,8 +14,8 @@ import time
 class foo(threading.Thread):
     
     def __init__(self, name):
-        super(foo, self).__init__()
-        self.logger = logger.logger(name, name)
+        super(foo, self).__init__(name = name)
+        self.logger = logger.Logger(name, name)
         self.logger.set_global_log_file("global.log", clear = False)
         self.logger.set_log_file("%s.log" % name, clear = True)
 
