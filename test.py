@@ -15,14 +15,15 @@ class foo(threading.Thread):
     
     def __init__(self, name):
         super(foo, self).__init__(name = name)
-        self.logger = logger.Logger(name, name)
-        self.logger.set_global_log_file("global.log", clear = False)
-        self.logger.set_log_file("%s.log" % name, clear = True)
+        self.logger = logger.Logger(name)
+        self.logger.cls_set_glo_file("global.log", clear = True)
+        self.logger.set_loc_file("%s.log" % name, clear = True)
 
     def run(self):
         while True:
             time.sleep(random.randint(1,5))
             self.logger.info(self.logger.name)
+            self.logger.warning(self.logger.level)
     
 
 
