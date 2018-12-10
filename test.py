@@ -15,8 +15,13 @@ class foo(threading.Thread):
     
     def __init__(self, name):
         super(foo, self).__init__(name = name)
+<<<<<<< HEAD
         self.logger = logger.Logger(name)
         self.logger.cls_set_glo_file("global.log", clear = True)
+=======
+        self.logger = logger.Logger(name, "DEBUG")
+        self.logger.cls_set_glo_file("global.log", clear = False)
+>>>>>>> ce4e9dcfd3e1c74b8aa5edd77dd1bb1d62b4870f
         self.logger.set_loc_file("%s.log" % name, clear = True)
 
     def run(self):
