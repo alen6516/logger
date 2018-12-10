@@ -29,48 +29,49 @@ class Logger(object):
         "ERROR":   3
     }
 
-    glo_file = None
+    _cls_glo_file = None
 
     @classmethod
     def cls_set_glo_file(cls, glo_file, clear = False):
         ''' set global log file ''' 
-        cls.glo_file = glo_file
+        cls._cls_glo_file = glo_file
         if clear:
-            open(cls.glo_file, 'w').write("")
+            open(cls._cls_glo_file, 'w').write("")
     
     def __init__(self, name = "unknown", level = "DEBUG", *args, **kwargs):
         super(Logger, self).__init__()
         self.name = name        # name of the logger, same as the caller's class name 
         self.level = level      # logger's level 
-        self.loc_file = None    # local log file
-
-    def set_loc_file(self, loc_file, clear = False):
-        ''' set the file to write msg '''
-        self.loc_file = loc_file
-
-        if clear:
-            ''' clear the file content '''
-            open(self.loc_file, 'w').write("")
+        self._loc_file = None    # local log file
 
     def _get_format(self):
         ''' get format of the output '''
-        ret_time = time.strftime("%H:%M:%S")
-        return "[ %10s ][ %10s ][ %s ]" % (self.name, current_thread().name, ret_time)
+        result_time = time.strftime("%H:%M:%S")
+        return "[ %10s ][ %10s ][ %s ]" % (self.name, current_thread().name, result_time)
     
-    def _write_file(self, msg, format_, level):
+    def _write_to_file(self, msg, format_, level):
         ''' write the msg to the file set by set_file '''
 
         msg = format_ + "[ %7s ]" % level +": " + msg + "\n"
         
         ''' write to local log file '''
-        if self.loc_file:
-            with open(self.loc_file, 'a') as f:
+        if self._loc_file:
+            with open(self._loc_file, 'a') as f:
                 f.write(msg)
 
         ''' write to global log file '''
-        if self.glo_file:
-            with open(self.glo_file, 'a') as f:
+        if self._cls_glo_file:
+            with open(self._cls_glo_file, 'a') as f:
                 f.write(msg)
+
+    def set_loc_file(self, loc_file, clear = False):
+        ''' set the file to write msg '''
+        self._loc_file = loc_file
+
+        if clear:
+            ''' clear the file content '''
+            open(self._loc_file, 'w').write("")
+
 
     def debug(self, msg):
        
@@ -82,7 +83,7 @@ class Logger(object):
 
         ret_format = self._get_format()
         print(ret_format + ": " + Color.OKBLUE + msg + Color.ENDC)
-        self._write_file(msg, ret_format, "DEBUG")
+        self._write_to_file(msg, ret_format, "DEBUG")
 
     def info(self, msg):
        
@@ -94,7 +95,7 @@ class Logger(object):
 
         ret_format = self._get_format()
         print(self._get_format()+": " + Color.OKGREEN + msg + Color.ENDC)
-        self._write_file(msg, ret_format, "INFO")
+        self._write_to_file(msg, ret_format, "INFO")
 
     def warning(self, msg):
        
@@ -106,7 +107,7 @@ class Logger(object):
 
         ret_format = self._get_format()
         print(self._get_format()+": " + Color.WARNING + msg + Color.ENDC)
-        self._write_file(msg, ret_format, "WARNING")
+        self._write_to_file(msg, ret_format, "WARNING")
 
     def error(self, msg):
        
@@ -118,5 +119,5 @@ class Logger(object):
 
         ret_format = self._get_format()
         print(self._get_format()+": " + Color.FAIL + msg + Color.ENDC)
-        self._write_file(msg, ret_format, "ERROR")
+        self._write_to_file(msg, ret_format, "ERROR")
     
